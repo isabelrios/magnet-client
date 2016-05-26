@@ -4,21 +4,24 @@ set -e
 # copy the TRAVIS_TAG to the more generic 'TAG' var
 export TAG=$TRAVIS_TAG
 
-echo "Installing dependencies from brew.."
-brew reinstall gradle flow xctool
+if [[ $TAG = "nightly" || $TAG =~ ^[0-9]+\.[0-9]+\.[0-9]+ ]]; then
+    export BUILD_RELEASE=1
+else
+    export BUILD_RELEASE=0
+fi
 
-echo "Installing react-native.."
 npm install -g react-native-cli
 
 # Install project
 npm install
 
+export PATH=$PATH:./node_modules/.bin
+
 if [[ "$BUILD_TYPE" == "android" ]];then
-    echo "bootstrapping android build.."
+    echo "Bootstrapping for android"
     source ./build-scripts/android/bootstrap.sh
 elif [[ "$BUILD_TYPE" == "ios" ]]; then
-    echo "TODO: bootstrap IOS build"
+    echo "Bootstrapping for ios"
 else
-    echo "No BUILD_TYPE specified"
-    exit -1
+    echo "Unknown build type"
 fi

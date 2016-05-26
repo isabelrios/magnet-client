@@ -13,7 +13,7 @@ import com.facebook.react.uimanager.events.RCTEventEmitter;
  * Created by wilsonpage on 03/05/2016.
  */
 public class MagnetWebView extends WebView implements LifecycleEventListener {
-    String TAG = "MagnetWebView";
+    private static final String TAG = "MagnetWebView";
     private boolean layoutSet;
 
     /**
@@ -27,6 +27,9 @@ public class MagnetWebView extends WebView implements LifecycleEventListener {
         super(reactContext);
         getSettings().setJavaScriptEnabled(true);
         getSettings().setDomStorageEnabled(true);
+
+        // prevents 1px padding in some embeds (eg. youtube)
+        getSettings().setUseWideViewPort(true);
     }
 
     @Override
@@ -69,5 +72,4 @@ public class MagnetWebView extends WebView implements LifecycleEventListener {
                 .getJSModule(RCTEventEmitter.class)
                 .receiveEvent(getId(), name, event);
     }
-
 }
